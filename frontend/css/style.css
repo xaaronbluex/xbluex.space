@@ -1,60 +1,66 @@
 body {
     margin: 0;
-    padding: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #00008b, #1e90ff);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Shadows Into Light", cursive;
-    color: rgb(26, 162, 216);
-    text-align: center;
-    overflow: hidden;
+    min-height: 2000px; /* Ensure page is scrollable */
+    background-color: #000;
+    font-family: 'Shadows Into Light', cursive;
+    color: #00f;
 }
-
-canvas {
+canvas#Matrix {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    color: rgb(5, 18, 122);
-    background: rgba(5, 28, 232, 0.931);
+    z-index: 1; /* Matrix rain is in the background */
 }
-
 .content {
     position: relative;
-    z-index: 1;
-    text-shadow: 0 0 10px rgba(243, 242, 243, 0.7);
+    z-index: 3; /* Bring content, including donut, above the Matrix */
+    text-align: center;
+    padding: 20px;
 }
-
 h1 {
-    font-size: 4rem;
+    font-size: 4em;
     margin: 0;
-    animation: fadeIn 2s ease-in;
+    text-shadow: 0 0 10px #00f;
 }
-
-.domain {
-    font-size: 2rem;
-    margin-top: 20px;
-    opacity: 0.8;
-}
-
 .clock {
-    font-size: 1.2rem;
+    font-size: 1.5em;
+    color: #0ff;
+}
+
+/* Donut Specific Styles */
+.donut-section {
+    position: relative;
+    z-index: 4;
     margin-top: 20px;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    color: rgb(226, 229, 23);
+    padding: 0; /* Removed padding to reduce overall section size */
+    text-align: center;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+.donut-section h2 {
+    color: #0f0;
+    font-size: 2em;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+    margin-bottom: 10px;
 }
 
-@media (max-width: 1200px) {
-    .clock {
-        margin-top: 20px;
-    }
+#donut {
+    font-family: 'Courier New', monospace;
+    font-size: 10px; /* Made the font smaller to reduce overall donut size */
+    line-height: 1;
+    letter-spacing: 0.1px; /* Slightly tighter letter spacing */
+    color: #0f0;
+    white-space: pre;
+    text-align: center;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+    overflow: hidden;
+    margin: 0 auto;
+    padding-bottom: 10px; /* Reduced padding below the donut */
+}
+
+.filler-content {
+    position: relative;
+    z-index: 2;
+    margin: 20px;
+    color: #0ff;
+    font-size: 1.2em;
 }

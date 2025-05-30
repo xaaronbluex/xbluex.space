@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinning ASCII Donut</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #e6e6e6;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: rgba(13, 13, 26, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2d2d4d;
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.7);
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            color: #4ecdc4;
+            font-size: 1.2rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .panel {
+            background: rgba(13, 13, 26, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2d2d4d;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .donut-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            overflow: auto;
+            padding: 15px;
+        }
+        
+        #donut {
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            line-height: 1;
+            letter-spacing: 0.2px;
+            color: #4ecdc4;
+            white-space: pre;
+            padding: 10px;
+            text-align: center;
+            height: 80%;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #2d2d4d, #1a1a2e);
+            color: #ffd166;
+            border: 1px solid #4ecdc4;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+        
+        button:hover {
+            background: linear-gradient(to right, #3d3d5d, #2a2a3e);
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .explanation {
+            border-left: 3px solid #ff6b6b;
+            padding: 15px;
+        }
+        
+        .explanation h3 {
+            color: #ffd166;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+        }
+        
+        .explanation ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        
+        .params {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .param-group {
+            background: rgba(26, 26, 46, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .param-group h4 {
+            color: #ffd166;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+        
+        .param {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #4ecdc4;
+        }
+        
+        .param:last-child {
+            border-bottom: none;
+        }
+        
+        .highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .luminance {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .char-box {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #4ecdc4;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #2d2d4d;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            #donut {
+                font-size: 12px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #donut {
+                font-size: 10px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .panel {
+                padding: 15px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(13, 13, 26, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4ecdc4;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Spinning ASCII Donut</h1>
+            <p class="subtitle">Mathematical art based on "donut.c" by Andy Sloane</p>
+        </header>
+        
+        <div class="content">
+            <div class="panel">
+                <div class="donut-container">
+                    <div id="donut">Rendering donut...</div>
+                </div>
+                
+                <div class="controls">
+                    <button id="startBtn">Start Animation</button>
+                    <button id="pauseBtn">Pause</button>
+                    <button id="resetBtn">Reset</button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="explanation">
+                    <h3>How the ASCII Donut Works</h3>
+                    <p>This mesmerizing animation is generated entirely through mathematical equations that describe a torus (donut shape) rotating in 3D space.</p>
+                    
+                    <p>The algorithm:</p>
+                    <ol>
+                        <li>Defines a torus using parameters <span class="highlight">R1</span> (inner radius) and <span class="highlight">R2</span> (outer radius)</li>
+                        <li>Rotates the torus around two axes (<span class="highlight">A</span> and <span class="highlight">B</span>)</li>
+                        <li>Projects 3D points onto a 2D screen using perspective projection</li>
+                        <li>Calculates surface luminance based on lighting angle</li>
+                        <li>Renders points as ASCII characters based on brightness levels</li>
+                    </ol>
+                    
+                    <div class="luminance">
+                        <div>Luminance scale:</div>
+                        <div class="char-box">.</div>
+                        <div class="char-box">,</div>
+                        <div class="char-box">-</div>
+                        <div class="char-box">~</div>
+                        <div class="char-box">:</div>
+                        <div class="char-box">;</div>
+                        <div class="char-box">=</div>
+                        <div class="char-box">!</div>
+                        <div class="char-box">*</div>
+                        <div class="char-box">#</div>
+                        <div class="char-box">$</div>
+                        <div class="char-box">@</div>
+                    </div>
+                </div>
+                
+                <div class="params">
+                    <div class="param-group">
+                        <h4>Donut Parameters</h4>
+                        <div class="param"><span>Inner Radius (R1):</span> <span class="highlight">1</span></div>
+                        <div class="param"><span>Outer Radius (R2):</span> <span class="highlight">2</span></div>
+                        <div class="param"><span>Distance (K2):</span> <span class="highlight">5</span></div>
+                        <div class="param"><span>Field of View (K1):</span> <span class="highlight">Calculated</span></div>
+                    </div>
+                    
+                    <div class="param-group">
+                        <h4>Rotation Parameters</h4>
+                        <div class="param"><span>θ Spacing:</span> <span class="highlight">0.07</span></div>
+                        <div class="param"><span>φ Spacing:</span> <span class="highlight">0.02</span></div>
+                        <div class="param"><span>A Rotation:</span> <span class="highlight">0.04/frame</span></div>
+                        <div class="param"><span>B Rotation:</span> <span class="highlight">0.02/frame</span></div>
+                    </div>
+                    
+                    <div class="param-group">
+                        <h4>Rendering Details</h4>
+                        <div class="param"><span>Screen Width:</span> <span class="highlight">80 chars</span></div>
+                        <div class="param"><span>Screen Height:</span> <span class="highlight">24 chars</span></div>
+                        <div class="param"><span>Z-Buffer:</span> <span class="highlight">Enabled</span></div>
+                        <div class="param"><span>Luminance Levels:</span> <span class="highlight">12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Based on "Donut math: how donut.c works" by Andy Sloane (2011) | Fixed scrolling implementation</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const donutElement = document.getElementById('donut');
+            // const startBtn = document.getElementById('startBtn');
+            // const pauseBtn = document.getElementById('pauseBtn');
+            // const resetBtn = document.getElementById('resetBtn');
+            
+            // Screen dimensions for ASCII art
+            const screenWidth = 80;
+            const screenHeight = 80;
+            
+            // Torus parameters
+            const R1 = 1;   // Inner radius
+            const R2 = 2;   // Outer radius
+            const K2 = 5;   // Distance from viewer to torus
+            
+            // Calculate K1 based on screen size
+            const K1 = screenWidth * K2 * 3 / (8 * (R1 + R2));
+            
+            // Rotation angles
+            let A = 0;  // Rotation around x-axis
+            let B = 0;  // Rotation around z-axis
+            
+            // Animation control
+            let animationId = null;
+            let paused = false;
+            
+            // Characters for luminance (dimmest to brightest)
+            const luminanceChars = '.,-~:;=!*#$@';
+            
+            function renderFrame() {
+                // Precompute sines and cosines
+                const cosA = Math.cos(A);
+                const sinA = Math.sin(A);
+                const cosB = Math.cos(B);
+                const sinB = Math.sin(B);
+                
+                // Initialize output and z-buffer
+                const output = Array(screenHeight).fill().map(() => Array(screenWidth).fill(' '));
+                const zbuffer = Array(screenHeight).fill().map(() => Array(screenWidth).fill(0));
+                
+                // Theta goes around the cross-sectional circle of the torus
+                for (let theta = 0; theta < 2 * Math.PI; theta += 0.07) {
+                    // Precompute sines and cosines of theta
+                    const costheta = Math.cos(theta);
+                    const sintheta = Math.sin(theta);
+                    
+                    // Phi goes around the center of revolution of the torus
+                    for (let phi = 0; phi < 2 * Math.PI; phi += 0.02) {
+                        // Precompute sines and cosines of phi
+                        const cosphi = Math.cos(phi);
+                        const sinphi = Math.sin(phi);
+                        
+                        // The x,y coordinate of the circle before revolving
+                        const circlex = R2 + R1 * costheta;
+                        const circley = R1 * sintheta;
+                        
+                        // Final 3D (x,y,z) coordinate after rotations
+                        const x = circlex * (cosB * cosphi + sinA * sinB * sinphi) - circley * cosA * sinB;
+                        const y = circlex * (sinB * cosphi - sinA * cosB * sinphi) + circley * cosA * cosB;
+                        const z = K2 + cosA * circlex * sinphi + circley * sinA;
+                        const ooz = 1 / z;  // One over z
+                        
+                        // x and y projection
+                        const xp = Math.floor(screenWidth / 2 + K1 * ooz * x);
+                        const yp = Math.floor(screenHeight / 2 - K1 * ooz * y); // Note: y is negated
+                        
+                        // Calculate luminance
+                        const L = cosphi * costheta * sinB 
+                                - cosA * costheta * sinphi 
+                                - sinA * sintheta 
+                                + cosB * (cosA * sintheta - costheta * sinA * sinphi);
+                        
+                        // Only render if L > 0 (surface facing viewer) and within screen bounds
+                        if (L > 0 && xp >= 0 && xp < screenWidth && yp >= 0 && yp < screenHeight) {
+                            // Test against z-buffer
+                            if (ooz > zbuffer[yp][xp]) {
+                                zbuffer[yp][xp] = ooz;
+                                
+                                // L ranges from 0 to ~1.414 (sqrt(2)), scale to luminance index
+                                const luminanceIndex = Math.floor(L * 8);
+                                
+                                // Set output character based on luminance
+                                output[yp][xp] = luminanceChars[luminanceIndex] || luminanceChars[luminanceChars.length - 1];
+                            }
+                        }
+                    }
+                }
+                
+                // Build output string
+                let frameString = '';
+                for (let j = 0; j < screenHeight; j++) {
+                    for (let i = 0; i < screenWidth; i++) {
+                        frameString += output[j][i];
+                    }
+                    frameString += '\n';
+                }
+                
+                // Update the DOM
+                donutElement.textContent = frameString;
+                
+                // Update rotation angles for next frame
+                A += 0.04;
+                B += 0.02;
+            }
+            
+            function animate() {
+                if (!paused) {
+                    renderFrame();
+                    animationId = requestAnimationFrame(animate);
+                }
+            }
+            
+            // Event listeners
+            // startBtn.addEventListener('click', () => {
+            //     if (paused) {
+            //         paused = false;
+            //         animate();
+            //     } else if (!animationId) {
+            //         animate();
+            //     }
+            // });
+            
+            // pauseBtn.addEventListener('click', () => {
+            //     paused = true;
+            // });
+            
+            // resetBtn.addEventListener('click', () => {
+            //     A = 0;
+            //     B = 0;
+            //     renderFrame();
+            // });
+            
+            // Initial render
+            renderFrame();animate()
+        });
+    </script>
+</body>
+</html>
